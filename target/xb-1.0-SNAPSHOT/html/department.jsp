@@ -25,45 +25,22 @@
         <section class="no-padding-bottom">
 
             <div class="list-group subject">
-                <div class="list-group-item">
-                    <a href="#deptDetail1" data-toggle="collapse">研发部 &nbsp;3人</a>
-                    <div id="deptDetail1" class="collapse deptDetail">
-                        <ul>
-                            <li>
-                                <a href="#">小东</a>
-                            </li>
-                            <li>
-                                <a href="#">小方</a>
-                            </li>
-                            <li>
-                                <a href="#">小标</a>
-                            </li>
-                        </ul>
+                <c:forEach items="${deptMapList}" var="deptMap" varStatus="i">
+                    <div class="list-group-item">
+                        <a href="#deptDetail${i.count}" data-toggle="collapse">${deptMap.name} &nbsp;${deptMap.deptCount}人</a>
+                        <div id="deptDetail${i.count}" class="collapse deptDetail">
+                            <ul>
+                                <c:forEach items="${deptMap.userMapList}" var="userMap">
+                                    <li>
+                                        <a href="#">${userMap.realName}</a>
+                                    </li>
+                                </c:forEach>
+
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="list-group-item">
-                    <a href="#deptDetail2" data-toggle="collapse">行政部 &nbsp;2人</a>
-                    <div id="deptDetail2" class="collapse deptDetail">
-                        <ul>
-                            <li>
-                                <a href="#">小标</a>
-                            </li>
-                            <li>
-                                <a href="#">小准</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="list-group-item">
-                    <a href="#deptDetail3" data-toggle="collapse">总裁办公室 &nbsp;1人</a>
-                    <div id="deptDetail3" class="collapse deptDetail">
-                        <ul>
-                            <li>
-                                <a href="#">东方标准</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                </c:forEach>
+
             </div>
         </section>
 

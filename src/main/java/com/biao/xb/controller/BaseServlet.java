@@ -1,5 +1,6 @@
 package com.biao.xb.controller;
 
+import com.biao.xb.utils.XBHashMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.ServletException;
@@ -37,7 +38,7 @@ public class BaseServlet extends HttpServlet {
      * @return
      */
     public static Map<String,String> getParam(HttpServletRequest request) {
-        Map<String, String> returnMap = new HashMap<>();
+        Map<String, String> returnMap = new XBHashMap();
 
         //request 中封装的前端的值
         Map<String,String[]> parameterMap = request.getParameterMap();

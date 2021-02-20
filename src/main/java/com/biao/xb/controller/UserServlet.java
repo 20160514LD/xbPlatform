@@ -1,18 +1,24 @@
 package com.biao.xb.controller;
 
+import com.biao.xb.entity.Dept;
+import com.biao.xb.entity.PageEntity;
 import com.biao.xb.entity.User;
+import com.biao.xb.service.DeptService;
 import com.biao.xb.service.UserService;
+import com.biao.xb.utils.FileUploadUtils;
 import org.apache.commons.beanutils.BeanUtils;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet("/user/*")
 public class UserServlet extends BaseServlet{
     private UserService userService = new UserService();
+    private DeptService deptService = new DeptService();
 
     /**
      * 检查 邮箱是否可用
@@ -114,4 +120,175 @@ public class UserServlet extends BaseServlet{
         // 重定向到首页
         response.sendRedirect("/html/home.jsp");
     }
+
+
+    /**
+     * 查询所有用户
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    public void findAll(HttpServletRequest request,HttpServletResponse response) throws Exception{
+
+        String realName = getParam(request).get("realName");
+
+        //返回所有的用户
+       // List<User> userList = userService.findAll();
+        List<User> userList = userService.search(realName);
+
+        request.setAttribute("realName",realName);
+        request.setAttribute("userList",userList);
+
+        request.getRequestDispatcher("/html/user.jsp").forward(request,response);
+    }
+
+
+    /**
+     * 用户搜索 + 分页
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    public void findPage(HttpServletRequest request,HttpServletResponse response) throws Exception {
+
+        Map<String, String> param = getParam(request);
+
+        String realName = param.get("realName");
+
+        //当前页码
+        Integer currPage = Integer.parseInt(param.get("currPage"));
+
+        //查询分页中的实体
+        PageEntity<User> pageEntity = userService.findPage(realName,currPage);
+
+        //返回数据给前端
+        request.setAttribute("pageData",pageEntity);
+        request.setAttribute("realName",realName);
+
+        //跳转页面
+        request.getRequestDispatcher("/html/user.jsp").forward(request,response);
+    }
+
+    /**
+     * 跳转用户详细页面
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    public void userDetail(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        Map<String, String> param = getParam(request);
+        Long id = Long.parseLong(param.get("id"));
+
+        //获取前端传过来的标识符 flag
+        String flag = param.get("flag");
+        User user = userService.findById(id);
+        request.setAttribute("user",user);
+
+        //判断是查看自己 还是 从查看别人
+        if ("detail".equals(flag)) {    //查看别人的首页
+
+            //查询粉丝数
+            Integer fansCount = userService.countFansByUserId(id);
+            //查询别看数 + 1
+            userService.incLook(id);
+            //查询用户实体信息
+
+            request.setAttribute("fans",fansCount);
+            request.getRequestDispatcher("/html/user_detail.jsp").forward(request,response);
+            return;
+        }
+
+            //查询关注数
+            Integer focusCount = userService.countFocusByUserId(id);
+            //查询部门信息
+            List<Dept> deptList = deptService.findAll();
+            //查询用户的信息
+            request.setAttribute("focus", focusCount);
+            request.setAttribute("deptList",deptList);
+
+            request.getRequestDispatcher("/html/user_look.jsp").forward(request, response);
+
+    }
+
+    public void updatePic(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        //调用文件 上传工具
+        String fileName = FileUploadUtils.upload("/upload",request);
+
+        //上传服务器端的真是路径
+        String picUrl = "http://localhost:8080/upload/" + fileName;
+        User loginUser = (User)request.getSession().getAttribute("loginUser");
+
+        //修改 session 中的 pic地址
+        loginUser.setPic(picUrl);
+        request.getSession().setAttribute("loginUser",loginUser);
+
+        //修改数据库中的 pic 地址
+        userService.update(loginUser.getId(),picUrl);
+
+        //将新的图片地址写回前端
+        writeObjectToString(response,picUrl);
+    }
+
+    /**
+     * 更新用户信息
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    public void update(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        request.setCharacterEncoding("utf-8");
+
+        User user = new User();
+        BeanUtils.populate(user,getParam(request));
+
+        User dbUser = userService.findById(user.getId());
+
+        //查询部门信息
+        Dept dept = deptService.findById(user.getDeptId());
+
+        user.setDeptName(dept.getName());
+
+        //设置前端不能提交的值
+        user.setPic(dbUser.getPic());
+        user.setLook(dbUser.getLook());
+        user.setPassword(dbUser.getPassword());
+        user.setEmail(dbUser.getEmail());
+
+        //前端没有勾选默认为公开
+        if (user.getIsSecret() == null) {
+            user.setIsSecret("1");  //公开
+        }
+
+        //更新用户信息
+        userService.updateUserInfo(user);
+
+        //重新放入 session
+        request.getSession().setAttribute("loginUser",user);
+
+        // 重新重定向到userDetail请求填充数据,然后通过userDetail转发到对应的页面进行数据渲染
+        response.sendRedirect("/user/userDetail?flag=detail&id=" + dbUser.getId());
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

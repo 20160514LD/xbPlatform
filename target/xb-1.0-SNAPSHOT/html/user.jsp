@@ -23,10 +23,12 @@
         </div>
         <section class="no-padding-bottom">
             <div class="title">
-                <form class="form-inline">
+                <form class="form-inline" action="/user/findPage" method="get">
+                    <%-- 在使用表单分页查询时,默认都从第一页开始查询 --%>
+                    <input type="hidden" name="currPage" value="1">
                     <div class="form-group">
                         <label for="inlineFormInput" class="sr-only">Name</label>
-                        <input id="inlineFormInput" type="text" placeholder="按名字查找" class="mr-sm-3 form-control">
+                        <input id="inlineFormInput" name="realName" value="${realName}" type="text" placeholder="按名字查找" class="mr-sm-3 form-control">
                     </div>
                     <div class="form-group">
                         <input type="submit" value="查询" class="btn btn-primary">
@@ -48,52 +50,37 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>小东</td>
-                        <td>0-表示女</td>
-                        <td>19</td>
-                        <td>我很美</td>
-                        <td>
-                            <input type="submit" value="详细信息" class="btn-xs btn-primary userDetail">
-                        </td>
-            
-                        <td>
-            
-                            <input type="checkbox" value="" class="checkbox-template">
-            
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>小标</td>
-                        <td>1-表示男</td>
-                        <td>20</td>
-                        <td>我很帅</td>
-                        <td>
-                            <input type="submit" value="详细信息" id="userDetail" class="btn-xs btn-primary userDetail">
-                        </td>
-                        <td>
-                            <input type="checkbox" value="" class="checkbox-template">
-                        </td>
-                    </tr>
+                    <c:forEach items="${pageData.data}" var="user" >
+                        <tr>
+                            <th scope="row">${user.id}</th>
+                            <td>${user.realName}</td>
+                            <td>${user.gender == 0? '男':'女'}</td>
+                            <td>${user.age}</td>
+                            <td>${user.info}</td>
+                            <td>
+                                <input type="submit" value="详细信息" onclick="userDetail(${user.id},${user.isSecret})" class="btn-xs btn-primary userDetail">
+                            </td>
+                            <td>
+                                <input type="checkbox" value="" class="checkbox-template">
+                            </td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             
                 <nav class="text-center" aria-label="Page navigation">
                     <ul class="pagination">
                         <li>
-                            <a href="#" aria-label="Previous">
+                            <a href="#" onclick="pre()" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
+                        <c:forEach begin="1" end="${pageData.totalPage}" varStatus="index">
+                            <li><a href="/user/findPage?currPage=${index.count}&realName=${realName}">${index.count}</a></li>
+                        </c:forEach>
+
                         <li>
-                            <a href="#" aria-label="Next">
+                            <a href="#" onclick="next()" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
@@ -128,9 +115,62 @@
 		    }
 		
 		})
-		
 	})
-	
+
+    /**
+     * 上一页
+     */
+    function pre() {
+        if (${pageData.currPage - 1 <= 0}) {
+            layer.msg('已经到顶啦！');
+            return;
+        }
+        window.location.href = "/user/findPage?currPage=${pageData.currPage - 1}&realName=${realName}"
+    }
+
+    /**
+     * 下一页
+     */
+    function next() {
+        if (${pageData.currPage + 1 > pageData.totalPage}) {
+            layer.msg('已经到底啦！');
+            return;
+        }
+        window.location.href = "/user/findPage?currPage=${pageData.currPage + 1}&realName=${realName}"
+    }
+
+    /**
+     * 查看别人信息
+     */
+    function userDetail(userId,isSecret) {
+        if (isSecret == 0) {
+            layer.msg('对方设置了私密！')
+            return
+        }
+        // 请求后台数据flag为detail 代表查询的是他人详情
+        location.href = '/user/userDetail?flag=detail&id=' + userId;
+    }
+
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
