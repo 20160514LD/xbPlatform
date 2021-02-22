@@ -31,9 +31,10 @@
                 <!--搜索文章的条件-->
                 <div class="myTitle">
                     <form class="form-inline">
+                        <input type="hidden" name="currPage" value="1">
                         <div class="form-group">
                             <label for="inlineFormInput" class="sr-only">Name</label>
-                            <input id="inlineFormInput" type="text" placeholder="按标题名字查找" class="mr-sm-3 form-control">
+                            <input id="inlineFormInput" name="title" value="${title}" type="text" placeholder="按标题名字查找" class="mr-sm-3 form-control">
                         </div>
                         <div class="form-group">
                             <input type="submit" value="查询" class="btn btn-primary">
@@ -45,64 +46,37 @@
                 </div>
 
                 <ul>
-                    <li class="list-group-item">
-                        <div style="float: right;">
-                            <span><strong>收藏数：</strong>100</span>
-                            <span>&nbsp;</span>
-                            <span>&nbsp;</span>
-                            <span>&nbsp;</span>
-                            <span><strong>浏览数：</strong>13052021</span>
-                        </div>
-                        <a href="/html/article_detail.jsp">如何做一名合格的Java工程师？</a>
-                        <p class="h6"><strong>作者：</strong>小标</p>
-                        <p class="h6"><strong>时间：</strong>2019-10-30 09:52:12</p>
-                        <p style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis">做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力 做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力 做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力 做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力 做一名工程师</p>
-                    </li>
+                    <c:forEach items="${pageData.data}" var="article">
+                        <li class="list-group-item">
+                            <%--<div style="float: right;">
+                                <span><strong>收藏数：</strong>100</span>
+                                <span>&nbsp;</span>
+                                <span>&nbsp;</span>
+                                <span>&nbsp;</span>
+                                <span><strong>浏览数：</strong>13052021</span>
+                            </div>--%>
+                            <a href="/article/articleDetail?id=${article.id}">${article.title}</a>
+                            <p class="h6"><strong>作者：</strong>${article.publishRealName}</p>
+                            <p class="h6"><strong>时间：</strong>${article.publishDate}</p>
+                            <p style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis">${article.content}</p>
+                        </li>
+                    </c:forEach>
 
-                    <li class="list-group-item">
-                        <div style="float: right;">
-                            <span><strong>收藏数：</strong>100</span>
-                            <span>&nbsp;</span>
-                            <span>&nbsp;</span>
-                            <span>&nbsp;</span>
-                            <span><strong>浏览数：</strong>13052021</span>
-                        </div>
-                        <a href="article_detail.jsp">如何做一名合格的Java工程师？</a>
-                        <p class="h6"><strong>作者：</strong>小标</p>
-                        <p class="h6"><strong>时间：</strong>2019-10-30 09:52:12</p>
-                        <p style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis">做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力 做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力 做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力 做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力 做一名工程师</p>
-                    </li>
-
-                    <li class="list-group-item">
-                        <div style="float: right;">
-                            <span><strong>收藏数：</strong>100</span>
-                            <span>&nbsp;</span>
-                            <span>&nbsp;</span>
-                            <span>&nbsp;</span>
-                            <span><strong>浏览数：</strong>13052021</span>
-                        </div>
-                        <a href="article_detail.jsp">如何做一名合格的Java工程师？</a>
-                        <p class="h6"><strong>作者：</strong>小标</p>
-                        <p class="h6"><strong>时间：</strong>2019-10-30 09:52:12</p>
-                        <p style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis">做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力 做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力 做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力 做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力，做一名Java工程师需要付出非常大的努力 做一名工程师</p>
-                    </li>
 
                 </ul>
 
                 <nav class="text-center" aria-label="Page navigation">
                     <ul class="pagination">
                         <li>
-                            <a href="#" aria-label="Previous">
+                            <a href="javascript:" onclick="pre()" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
+                        <c:forEach begin="1" end="${pageData.totalPage}" varStatus="i">
+                            <li><a href="/article/findPage?currPage=${i.count}&title=${title}">${i.count}</a></li>
+                        </c:forEach>
                         <li>
-                            <a href="#" aria-label="Next">
+                            <a href="javascript:" onclick="next()" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
@@ -123,4 +97,31 @@
 	$("#addArt").click(function () {
 	    window.location.href = '/html/article_add.jsp'
 	});
+    /**
+     * 上一页
+     */
+    function pre() {
+        if (${pageData.currPage-1<=0}) {
+
+            layer.msg('已经到顶啦！');
+            return;
+
+        }
+
+        window.location.href = "/article/findPage?currPage=${pageData.currPage - 1}&title=${title}"
+    }
+
+    /**
+     * 下一页
+     */
+    function next() {
+        if (${pageData.currPage+1>pageData.totalPage}) {
+
+            layer.msg('已经到底啦！');
+            return;
+
+        }
+
+        window.location.href = "/article/findPage?currPage=${pageData.currPage + 1}&title=${title}"
+    }
 </script>

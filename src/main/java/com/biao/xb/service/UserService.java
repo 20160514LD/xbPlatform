@@ -151,6 +151,68 @@ public class UserService {
     public void updateUserInfo(User user) {
         userDao.updateUserInfo(user);
     }
+
+    /**
+     * 根据用户id查询关注数列表
+     * @param id
+     * @return
+     */
+    public List<Long> findFocusListByUserId(Long id) {
+        return userDao.findFocusListByUserId(id);
+    }
+
+    /**
+     * 加关注/取消关注
+     * @param id
+     * @param userId
+     * @return
+     */
+    public Integer focus(Long id, Long userId) {
+        //首先判断用户是否已经关注了，查询用户所关注的列表
+        List<Long> focusList = userDao.findFocusListByUserId(id);
+        if (focusList != null && focusList.contains(userId)) {
+            //若用户已经关注了，取消关注
+            userDao.unFocus(id,userId);
+            return 0;
+        }else {
+            //若用户没有关注，则关注
+            userDao.focus(id,userId);
+            return 1;
+        }
+
+    }
+
+    /**
+     * 查询我关注的+分页
+     * @param id
+     * @param currPage
+     * @return
+     */
+    public PageEntity<Map<String, Object>> findFocusPage(Long id, Integer currPage) {
+
+        // 当前页 总记录数 总页数 查询结果 页数
+        PageEntity<Map<String, Object>> pageEntity = new PageEntity<>();
+        Integer pageSize = pageEntity.getPageSize();
+
+        //其实索引
+        Integer startIndex = (currPage - 1) * pageSize;
+
+        //根据条件进行查询总结果
+        List<Map<String, Object>> userList = userDao.findFocusPage(id,startIndex,pageSize);
+
+        //查询总记录数
+        Integer totalCount = userDao.countFocusByUserId(id);
+
+        //总页数
+        Integer totalPage = totalCount % pageSize ==0 ? totalCount / pageSize : totalCount / pageSize + 1;
+
+        pageEntity.setData(userList);
+        pageEntity.setTotalCount(totalCount);
+        pageEntity.setTotalPage(totalPage);
+        pageEntity.setCurrPage(currPage);
+
+        return pageEntity;
+    }
 }
 
 

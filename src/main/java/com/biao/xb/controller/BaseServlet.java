@@ -1,5 +1,6 @@
 package com.biao.xb.controller;
 
+import com.biao.xb.entity.User;
 import com.biao.xb.utils.XBHashMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -7,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -15,10 +17,15 @@ import java.util.Map;
 
 public class BaseServlet extends HttpServlet {
 
+    public HttpSession session;
+    public User loginUser;
+
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 统一处理Post提交乱码问题
         request.setCharacterEncoding("utf-8");
+        session = request.getSession();
+        loginUser = (User)session.getAttribute("loginUser");
 
         String uri = request.getRequestURI();
         uri = uri.substring(uri.lastIndexOf("/") + 1);

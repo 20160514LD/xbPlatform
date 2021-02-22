@@ -1,9 +1,14 @@
 package com.biao.xb.dao;
 
 import com.biao.xb.entity.User;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -204,6 +209,68 @@ public class UserDao extends BaseDao{
                 user.getDeptName(),
                 user.getDeptId(),
                 user.getId());
+    }
+
+    /**
+     * 根据用户id查询关注数列表
+     * @param id
+     * @return
+     */
+    public List<Long> findFocusListByUserId(Long id) {
+        try {
+            return jdbcTemplate.query("select user_focus_id from userfocus uf where uf.user_id=?", new ResultSetExtractor<List<Long>>() {
+                @Override
+                public List<Long> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                    List<Long> list = new ArrayList<>();
+                    while (resultSet.next()) {
+                        list.add(resultSet.getLong("user_focus_id"));
+                    }
+                    return list;
+                }
+            },id);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 取消关注
+     * @param id
+     * @param userId
+     */
+    public void unFocus(Long id, Long userId) {
+        jdbcTemplate.update("delete from userfocus where user_id=? and user_focus_id = ?",id,userId);
+    }
+
+    /**
+     * 添加关注
+     * @param id
+     * @param userId
+     */
+    public void focus(Long id, Long userId) {
+        jdbcTemplate.update("insert into userfocus values(?,?)",id,userId);
+    }
+
+    /**
+     * 查询我关注的用户+分页
+     * @param id
+     * @param startIndex
+     * @param pageSize
+     * @return
+     */
+    public List<Map<String, Object>> findFocusPage(Long id, Integer startIndex, Integer pageSize) {
+        try {
+            String sql="select u.id,u.real_name realName,u.is_secret isSecret from user u where u.id in \n" +
+                    "    (\n" +
+                    "        select user_focus_id from userfocus uf where user_id=?\n" +
+                    "    )\n" +
+                    "    limit ?,?";
+            return jdbcTemplate.queryForList(sql,id,startIndex,pageSize);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
 

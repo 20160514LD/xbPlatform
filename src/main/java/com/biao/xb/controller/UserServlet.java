@@ -160,6 +160,10 @@ public class UserServlet extends BaseServlet{
 
         //查询分页中的实体
         PageEntity<User> pageEntity = userService.findPage(realName,currPage);
+        //判断哪些用户是我所关注的
+        List<Long> focusList = userService.findFocusListByUserId(loginUser.getId());
+
+        request.setAttribute("focusList",focusList);
 
         //返回数据给前端
         request.setAttribute("pageData",pageEntity);
@@ -267,6 +271,43 @@ public class UserServlet extends BaseServlet{
 
         // 重新重定向到userDetail请求填充数据,然后通过userDetail转发到对应的页面进行数据渲染
         response.sendRedirect("/user/userDetail?flag=detail&id=" + dbUser.getId());
+    }
+
+    /**
+     * 加关注/取消关注
+      * @param request
+     * @param response 1:表示添加用户关注 0：表示用户已经添加过关注（取消关注）
+     * @throws Exception
+     */
+    public void focus(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        Long userId = Long.parseLong(getParam(request).get("userId"));
+
+        Long id = loginUser.getId();
+
+        // 用户加关注(1:关注  0:取消关注)
+        Integer flag = userService.focus(id,userId);
+
+        writeObjectToString(response,flag);
+    }
+
+    /**
+     * 查询我已经关注的用户 + 分页
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    public void findFocusPage(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        Map<String, String> param = getParam(request);
+        //获取当前页
+        Integer currPage = Integer.parseInt(param.get("currPage"));
+
+        //根据条件进行分页查询
+        PageEntity<Map<String, Object>> pageData = userService.findFocusPage(loginUser.getId(),currPage);
+        //返回结果给前端
+        request.setAttribute("pageData", pageData);
+
+        request.getRequestDispatcher("/html/my_user.jsp").forward(request,response);
+
     }
 }
 

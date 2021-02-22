@@ -26,51 +26,29 @@
 
             <div class="list-group myList">
                 <ul>
-                    <li class="list-group-item">
-                        <a href="user_detail.jsp">小东</a>
-                        <div style="float: right" class="text-right">
-                            <input type="submit" class="btn btn-danger" value="取消关注">
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="user_detail.jsp">小标</a>
-                        <div style="float: right" class="text-right">
-                            <input type="submit" class="btn btn-danger" value="取消关注">
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="user_detail.jsp">小艾</a>
-                        <div style="float: right" class="text-right">
-                            <input type="submit" class="btn btn-danger" value="取消关注">
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="user_detail.jsp">小赵</a>
-                        <div style="float: right" class="text-right">
-                            <input type="submit" class="btn btn-danger" value="取消关注">
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="user_detail.jsp">小王</a>
-                        <div style="float: right" class="text-right">
-                            <input type="submit" class="btn btn-danger" value="取消关注">
-                        </div>
-                    </li>
+                    <c:forEach items="${pageData.data}" var="userFocus">
+                        <li class="list-group-item">
+                            <a href="javascript:" onclick="userDatail(${userFocus.id},${userFocus.isSecrect})">${userFocus.realName}</a>
+                            <div style="float: right" class="text-right">
+                                <input type="submit" onclick="delFocus(${userFocus.id})" class="btn btn-danger" value="取消关注">
+                            </div>
+                        </li>
+                    </c:forEach>
+
                 </ul>
                 <nav class="text-center" aria-label="Page navigation">
                     <ul class="pagination">
                         <li>
-                            <a href="#" aria-label="Previous">
+                            <a href="#" onclick="pre()" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
+                        <c:forEach begin="1" end="${pageData.totalPage}" varStatus="i">
+                            <li><a href="/user/findFocusPage?currPage=${i.count}">${i.count}</a></li>
+                        </c:forEach>
+
                         <li>
-                            <a href="#" aria-label="Next">
+                            <a href="#" onclick="next()" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
@@ -86,3 +64,84 @@
 
 </body>
 </html>
+
+<script type="text/javascript">
+    /**
+     * 上一页
+     */
+    function pre() {
+        if (${pageData.currPage-1<=0}) {
+
+            layer.msg('已经到顶啦！');
+            return;
+
+        }
+        window.location.href = "/user/findFocusPage?currPage=${pageData.currPage - 1}"
+    }
+
+    /**
+     * 下一页
+     */
+    function next() {
+        if (${pageData.currPage+1>pageData.totalPage}) {
+
+            layer.msg('已经到底啦！');
+            return;
+        }
+        window.location.href = "/user/findFocusPage?currPage=${pageData.currPage + 1}"
+    }
+
+    /**
+     * 取消关注
+     */
+    function delFocus(userId) {
+        $.post("/user/focus?userId="+userId,function (res) {
+            if (res == 0) {
+                window.location.reload()
+            }
+        })
+    }
+
+    /**
+     * 查看详情
+     */
+    function userDatail(userId,isSecret) {
+        if (isSecret) {
+            layer.msg('对方设置了私密')
+            return
+        }
+        location.href = '/user/userDetail?flag=detail&id='+userId;
+    }
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

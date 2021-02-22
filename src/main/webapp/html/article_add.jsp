@@ -26,14 +26,14 @@
         <section class="no-padding-bottom">
 
             <div class="block-body">
-                <form>
+                <form action="/article/add" method="post">
                     <div class="form-group">
                         <label class="form-control-label">标题</label>
-                        <input type="text" placeholder="文章标题" class="form-control">
+                        <input type="text"  name="title" placeholder="文章标题" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label class="form-control-label">文章内容</label>
-                        <textarea class="form-control" rows="5"></textarea>
+                        <textarea class="form-control" name="content" rows="5" required></textarea>
                     </div>
                     <div class="text-center form-group">
                         <input type="submit" value="发布" class="btn btn-primary">
@@ -49,3 +49,6 @@
 
 </body>
 </html>
+<script>
+
+</script>

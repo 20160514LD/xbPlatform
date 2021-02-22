@@ -42,8 +42,8 @@ public class Article {
         return browseCount;
     }
 
-    public void setBrowserCount(Long browserCount) {
-        this.browseCount = browserCount;
+    public void setBrowseCount(Long browseCount) {
+        this.browseCount = browseCount;
     }
 
     public Date getPublishDate() {

@@ -32,7 +32,7 @@
                             <ul>
                                 <c:forEach items="${deptMap.userMapList}" var="userMap">
                                     <li>
-                                        <a href="#">${userMap.realName}</a>
+                                        <a href="#" onclick="userDetail(${userMap.id},${userMap.isSecret})">${userMap.realName}</a>
                                     </li>
                                 </c:forEach>
 
@@ -50,3 +50,12 @@
 
 </body>
 </html>
+<script type="text/javascript">
+    function userDetail(userId,isSecret) {
+        if (isSecret == 0) {
+            layer.msg('对方设置了私密!')
+            return;
+        }
+        window.location="/user/userDetail?flag=detail&id="+userId;
+    }
+</script>

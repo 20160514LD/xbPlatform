@@ -61,7 +61,8 @@
                                 <input type="submit" value="详细信息" onclick="userDetail(${user.id},${user.isSecret})" class="btn-xs btn-primary userDetail">
                             </td>
                             <td>
-                                <input type="checkbox" value="" class="checkbox-template">
+                                 <%--调用list集合原生方法contains--%>
+                                <input type="checkbox" ${focusList.contains(user.id)? 'checked':''} onclick="addFocus(event,${user.id})" class="checkbox-template">
                             </td>
                         </tr>
                     </c:forEach>
@@ -106,15 +107,14 @@
 		    window.location.href = '/html/user_detail.jsp'
 		});
 		
-		$(".table").find("input[type='checkbox']").on("click",function () {
+		/*$(".table").find("input[type='checkbox']").on("click",function () {
 		    if($(this).prop("checked")){
 		        layer.msg("关注成功")
 		    }else{
 		        layer.msg("取关成功")
-		
+
 		    }
-		
-		})
+		})*/
 	})
 
     /**
@@ -149,6 +149,24 @@
         }
         // 请求后台数据flag为detail 代表查询的是他人详情
         location.href = '/user/userDetail?flag=detail&id=' + userId;
+    }
+
+    function addFocus(event,userId) {
+        if (userId ==  ${loginUser.id}) {
+
+            layer.msg('不能关注自己')
+            event.preventDefault()  //取消默认事件（不让复选框钩住）
+            return
+        }
+        $.post('/user/focus',{
+            "userId":userId
+        },function (res) {
+            if (res == 0) {
+                layer.msg('取消关注')
+            }else {
+                layer.msg('关注成功')
+            }
+        })
     }
 
 </script>

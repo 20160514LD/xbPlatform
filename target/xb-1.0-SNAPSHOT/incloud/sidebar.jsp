@@ -16,9 +16,9 @@
         <li><a href="#userDropdown"  data-toggle="collapse" aria-expanded="true"> <i class="icon-windows"></i>用户列表</a>
             <ul id="userDropdown" class="collapse show">
                 <li><a href="/user/findPage?currPage=1">查看用户</a></li>
-                <li><a href="/html/my_user.jsp">我关注的用户</a></li>
-                <li><a href="/html/article.jsp">发布文章</a></li>
-                <li><a href="/html/article_collect.jsp">我的收藏</a></li>
+                <li><a href="/user/findFocusPage?currPage=1">我关注的用户</a></li>
+                <li><a href="/article/findPage?currPage=1">发布文章</a></li>
+                <li><a href="/article/favoritePage?currPage=1">我的收藏</a></li>
             </ul>
         </li>
         <!--<li><a href="login.jsp"> <i class="icon-logout"></i>Login page </a></li>-->
