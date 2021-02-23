@@ -87,6 +87,9 @@ public class Meeting {
     }
 
     public String getMakeUser() {
+        if (makeUser.length() == 1) {
+            return makeUser;
+        }
         makeUser = makeUser.substring(1);
         makeUser = makeUser.substring(0,makeUser.length() - 1);
         return makeUser;

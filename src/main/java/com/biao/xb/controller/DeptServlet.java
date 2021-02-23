@@ -1,5 +1,6 @@
 package com.biao.xb.controller;
 
+import com.biao.xb.entity.Dept;
 import com.biao.xb.service.DeptService;
 import com.biao.xb.service.UserService;
 
@@ -36,6 +37,17 @@ public class DeptServlet extends BaseServlet {
         request.setAttribute("deptMapList",deptMapList);
         request.getRequestDispatcher("/html/department.jsp").forward(request,response);
 
+    }
+
+    /**
+     * 查询部门的信息
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    public void findAll(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        List<Dept> depts = deptService.findAll();
+        writeObjectToString(response,depts);
     }
 
 }

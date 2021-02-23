@@ -213,6 +213,14 @@ public class UserService {
 
         return pageEntity;
     }
+
+    /**
+     * 更改用户登录时间
+     * @param id
+     */
+    public void updateLoginTime(Long id) {
+        userDao.updateLoginTime(id);
+    }
 }
 
 

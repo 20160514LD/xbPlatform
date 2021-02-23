@@ -76,7 +76,7 @@ public class BaseServlet extends HttpServlet {
 
             String jsonStr = objectMapper.writeValueAsString(obj);
             //统一设置编码
-            response.setContentType("application/json'charset=utf-8");
+            response.setContentType("application/json;charset=utf-8");
             response.getWriter().write(jsonStr);
         }catch (Exception e) {
             e.printStackTrace();

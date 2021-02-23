@@ -6,9 +6,11 @@ import com.biao.xb.entity.User;
 import com.biao.xb.service.DeptService;
 import com.biao.xb.service.UserService;
 import com.biao.xb.utils.FileUploadUtils;
+import com.biao.xb.utils.XBUtils;
 import org.apache.commons.beanutils.BeanUtils;
 
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -83,6 +85,7 @@ public class UserServlet extends BaseServlet{
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String checkCode = request.getParameter("checkCode");
+        String remember = request.getParameter("remember");
 
         // 2.校验验证码是否一致
         String sessionCode = (String) session.getAttribute("sessionCode");
@@ -115,6 +118,18 @@ public class UserServlet extends BaseServlet{
             return;
         }
 
+        //更改用户登录时间
+        userService.updateLoginTime(user.getId());
+
+        if ("1".equals(remember)) {
+            //勾选了
+            Cookie cookie = new Cookie("loginUser",user.getId()+"");
+            //设置 cookie 携带路径（整体项目都携带）
+            cookie.setPath("/");
+            cookie.setMaxAge(60 * 60 * 24 * 7);
+            response.addCookie(cookie);
+
+        }
         // 保存到session中,方便下次取出
         session.setAttribute("loginUser",user);
         // 重定向到首页
@@ -308,6 +323,41 @@ public class UserServlet extends BaseServlet{
 
         request.getRequestDispatcher("/html/my_user.jsp").forward(request,response);
 
+    }
+
+    /**
+     * 根据部门id查询用户信息
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    public void findUserByDeptId(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        Map<String, String> param = getParam(request);
+        Long deptId = Long.parseLong(param.get("deptId"));
+
+        List<Map<String, Object>> userByDeptId = userService.findUserByDeptId(deptId);
+
+        writeObjectToString(response,userByDeptId);
+    }
+
+
+    /**
+     * 注销
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    public void logout(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        session.invalidate();
+
+        Cookie loginCookie = XBUtils.getCookie(request, "loginUser");
+        if (loginUser != null) {
+            // 销毁cookie
+            loginCookie.setPath("/");
+            loginCookie.setMaxAge(0);
+            response.addCookie(loginCookie);
+        }
+        response.sendRedirect("/index.jsp");
     }
 }
 

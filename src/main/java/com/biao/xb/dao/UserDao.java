@@ -272,6 +272,18 @@ public class UserDao extends BaseDao{
             return null;
         }
     }
+
+    /**
+     * 更改用户登录时间
+     * @param id
+     */
+    public void updateLoginTime(Long id) {
+        try {
+            jdbcTemplate.update("update user set login_time = CURDATE() where id=?",id);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

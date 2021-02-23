@@ -26,7 +26,7 @@
         <li><a href="#depDropdown"  data-toggle="collapse"> <i class="icon-windows2"></i>部门列表</a>
             <ul id="depDropdown" class="collapse show ">
                 <li><a href="/dept/findAllMap">全部部门</a></li>
-                <li><a href="/html/meeting.jsp">会议系统</a></li>
+                <li><a href="/meeting/findPage?currPage=1">会议系统</a></li>
             </ul>
         </li>
 

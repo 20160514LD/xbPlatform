@@ -33,25 +33,30 @@
         <section class="no-padding-bottom">
 
             <div class="myTitle">
-                <h3 class="text-center">关于《小标会议平台》项目部分模块功能升级</h3>
-                <input type="submit" value="取消会议" class="btn btn-danger">
-                <input type="submit" value="参加会议" class="btn btn-info">
+                <h3 class="text-center">${meeting.title}</h3>
+                <c:if test="${flag}">
+                    <input type="button" onclick="joinMeeting()" value="取消会议" class="btn btn-danger">
+                </c:if>
+                <c:if test="${!flag}">
+                    <input type="button" onclick="joinMeeting()" value="参加会议" class="btn btn-info">
+                </c:if>
 
             </div>
 
             <div class="myContent">
-                <p class="h6"><strong>部门：</strong>研发部</p>
-                <p class="h6"><strong>应到：</strong>10<span>人</span></p>
-                <p class="h6"><strong>实到：</strong>9<span>人</span></p>
-                <p class="h6"><strong>未到：</strong>1<span>人</span></p>
-                <textarea style="padding: 2px" disabled="disabled" class="form-control" rows="11">小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级： 小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级：小标会议平台有如下模块需要升级</textarea>
-
+                <p class="h6"><strong>部门：</strong>${meeting.deptName}</p>
+                <p class="h6"><strong>应到：</strong>${joinCount}<span>人</span></p>
+                <p class="h6"><strong>实到：</strong>${realCount}<span>人</span></p>
+                <p class="h6"><strong>未到：</strong>${noCount}<span>人</span></p>
+                <textarea style="padding: 2px" disabled="disabled" class="form-control" rows="11">
+                    ${meeting.content}
+                </textarea>
 
             </div>
 
             <div class="text-right myList">
-                <p>开始时间：2019-10-30 15:40</p>
-                <p>日期：2019-10-30</p>
+                <p>开始时间：${meeting.startTime}</p>
+                <p>日期：${meeting.publishDate}</p>
             </div>
         </section>
 
@@ -62,3 +67,43 @@
 
 </body>
 </html>
+<script type="text/javascript">
+    /**
+     * 参加 / 取消 会议
+     */
+    function joinMeeting() {
+        if(${meeting.status == 1}) {
+            layer.msg('不可操作！会议正在进行中！')
+            return
+        }
+        if(${meeting.status == 2}) {
+            layer.msg('不可操作！已经结束！')
+            return
+        }
+        if(${!isJoin}) {
+            layer.msg('本次会议您不可操作！')
+            return
+        }
+
+        window.location.href = "/meeting/joinMeeting?id=${meeting.id}";
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
