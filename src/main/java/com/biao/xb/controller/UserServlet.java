@@ -14,8 +14,11 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 @WebServlet("/user/*")
 public class UserServlet extends BaseServlet{
@@ -133,7 +136,7 @@ public class UserServlet extends BaseServlet{
         // 保存到session中,方便下次取出
         session.setAttribute("loginUser",user);
         // 重定向到首页
-        response.sendRedirect("/html/home.jsp");
+        response.sendRedirect("/home/index");
     }
 
 
@@ -359,6 +362,41 @@ public class UserServlet extends BaseServlet{
         }
         response.sendRedirect("/index.jsp");
     }
+
+    /**
+     * 处理微信回调
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    public void wx_login(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        //加载配置文件
+        try {
+            Properties prop = new Properties();
+            InputStream in = UserServlet.class.getClassLoader().getResourceAsStream("config.properties");
+            prop.load(in);
+
+            String appid = prop.getProperty("wx.AppID");
+
+            //微信授权成功后的回调地址
+            String redirect_uri = prop.getProperty("wx.redirect_uri");
+
+            //Step1：获取Authorization Code
+            String url = "https://open.weixin.qq.com/connect/qrconnect?" +
+                    "appid="+appid +
+                    "&redirect_uri="+ URLEncoder.encode(redirect_uri) +
+                    "&response_type=code" +
+                    "&scope=snsapi_login&state=STATE#wechat_redirect";
+
+            //重定向微信登录指定的地址进行微信登录授权，授权成功后返回 code
+            response.sendRedirect(url);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 }
 
 

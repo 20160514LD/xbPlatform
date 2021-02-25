@@ -12,7 +12,7 @@
     </div>
     <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
     <ul class="list-unstyled">
-        <li><a href="/html/home.jsp"> <i class="icon-home"></i>主页 </a></li>
+        <li><a href="/home/index"> <i class="icon-home"></i>主页 </a></li>
         <li><a href="#userDropdown"  data-toggle="collapse" aria-expanded="true"> <i class="icon-windows"></i>用户列表</a>
             <ul id="userDropdown" class="collapse show">
                 <li><a href="/user/findPage?currPage=1">查看用户</a></li>

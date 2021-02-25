@@ -50,6 +50,7 @@ public class LoginFilter implements Filter {
 
 
                         targetName.equals("login") ||                  // 放行登录请求
+                        targetName.equals("wx_login") ||
                         targetName.equals("logout") ||
                         targetName.equals("forget") ||
                         targetName.equals("register") ||

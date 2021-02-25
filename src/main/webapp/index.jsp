@@ -63,7 +63,12 @@
                         <input type="checkbox" name="remember" value="1"> 记住我
                     </label>
                 </div>
-                <button type="submit" class="btn">登录</button>
+                <div class="form-group">
+                    <button id="wxLogin" class="btn">微信登录</button>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn">登录</button>
+                </div>
 
                 <div class="row">
                     <div style="padding: 10px 25px">
@@ -88,6 +93,8 @@
 <script src="/js/layer.js"></script>
 </body>
 <script type="text/javascript">
-
+    $("#wxLogin").click(function() {
+        location.href = "/user/wx_login";
+    })
 </script>
 </html>

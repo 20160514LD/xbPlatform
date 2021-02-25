@@ -284,6 +284,20 @@ public class UserDao extends BaseDao{
             e.printStackTrace();
         }
     }
+
+    /**
+     * 根据 openid 查询是否存在用户
+     * @param openid
+     * @return
+     */
+    public User findByWxOpenId(String openid) {
+        try {
+            return jdbcTemplate.queryForObject("select * from user where wx_openid=?",new BeanPropertyRowMapper<>(User.class),openid);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
 
 

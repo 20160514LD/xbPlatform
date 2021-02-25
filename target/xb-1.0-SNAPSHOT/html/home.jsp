@@ -30,7 +30,7 @@
                                 <div class="title">
                                     <strong>新增用户</strong>
                                 </div>
-                                <div class="number dashtext-1">27</div>
+                                <div class="number dashtext-1">${homeCount.userCount}</div>
                             </div>
                             <div class="progress progress-template">
                                 <!--这个百分比由前端计算,取接近100%的数,例如 140就是接近200于是为40%-->
@@ -45,7 +45,7 @@
                                 <div class="title">
                                     <strong>新增文章</strong>
                                 </div>
-                                <div class="number dashtext-3">140</div>
+                                <div class="number dashtext-3">${homeCount.articleCount}</div>
                             </div>
                             <div class="progress progress-template">
                                 <!--这个百分比由前端计算,取接近100%的数,例如 140就是接近200于是为40%-->
@@ -59,7 +59,7 @@
                                 <div class="title">
                                     <strong>新开会议</strong>
                                 </div>
-                                <div class="number dashtext-6">8</div>
+                                <div class="number dashtext-6">${homeCount.meetingCount}</div>
                             </div>
                             <div class="progress progress-template">
                                 <!--这个百分比由前端计算,取接近100%的数,例如 140就是接近200于是为40%-->
@@ -178,7 +178,7 @@
                         pointHoverBorderWidth: 2,
                         pointRadius: 1,
                         pointHitRadius: 0,
-                        data: [5, 0, 0, 2, 4, 3, 2, 1, 0],
+                        data: ${detail.get(0)},
                         spanGaps: false
                     },
 
@@ -202,7 +202,7 @@
                         pointHoverBorderWidth: 2,
                         pointRadius: 1,
                         pointHitRadius: 10,
-                        data: [7, 5, 6, 5, 6, 12, 8, 4, 9],
+                        data: ${detail.get(1)},
                         spanGaps: false
                     },
                     {
@@ -225,7 +225,7 @@
                         pointHoverBorderWidth: 2,
                         pointRadius: 1,
                         pointHitRadius: 10,
-                        data: [1, 2, 3, 2, 5, 6, 1, 2, 4],
+                        data: ${detail.get(2)},
                         spanGaps: false
                     }
                 ]
@@ -236,5 +236,7 @@
         var pieChartExample = {
             responsive: true
         };
+
+
     })
 </script>

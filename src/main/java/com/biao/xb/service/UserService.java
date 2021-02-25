@@ -38,11 +38,11 @@ public class UserService {
         // 默认私密
         user.setIsSecret("0");
         // 真实姓名默认用户名
-        user.setRealName(user.getUsername());
+        //user.setRealName(user.getUsername());
         // 注册时间为当前
         user.setRegisterTime(new Date());
         //默认头像
-        user.setPic("http://localhost:8080/upload/def.png");
+        //user.setPic("http://localhost:8080/upload/def.png");
 
         userDao.save(user);
     }
@@ -220,6 +220,15 @@ public class UserService {
      */
     public void updateLoginTime(Long id) {
         userDao.updateLoginTime(id);
+    }
+
+    /**
+     * 根据 openid 查询是否存在用户
+     * @param openid
+     * @return
+     */
+    public User findByWxOpenId(String openid) {
+        return userDao.findByWxOpenId(openid);
     }
 }
 
